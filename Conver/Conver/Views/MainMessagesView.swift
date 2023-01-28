@@ -29,17 +29,11 @@ class MainMessagesViewModel: ObservableObject{
                     print("Failed to fetch current user:", error)
                     return
                 }
-    //            self.errorMessage = "123"
                 guard let data = snapshot?.data() else {
                     self.errorMessage = "No data found"
                     return
                 }
-    //            self.errorMessage = "Data: \(data.description)"
-                let uid = data["uid"] as? String ?? ""
-                let email = data["email"] as? String ?? ""
-                let profileImageUrl = data["profileImageUrl"] as? String ?? ""
-                self.chatUser = ChatUser(uid: uid, email: email, profileImageUrl: profileImageUrl)
-    //            self.errorMessage = chatUser.profileImageUrl
+                self.chatUser = .init(data: data)
             }
         }
     // MARK: - Sign out from the application
@@ -55,14 +49,15 @@ class MainMessagesViewModel: ObservableObject{
     struct MainMessagesView: View {
     // MARK: - Properties
     @State var shouldShowLogOutOptions = false
+    @State var shouldShowNewMessageScreen = false
+    @State var shouldNavigateToChatLogView = false
+    @State var chatUser: ChatUser?
     @ObservedObject private var vm = MainMessagesViewModel()
     // MARK: - Body
     var body: some View {
         NavigationView{
             VStack{
-                // Text("Current user ID: \(vm.errorMessage)")
                 // MARK: - NAVBAR
-                
                 HStack(spacing: 16){
                     WebImage(url: URL(string: vm.chatUser?.profileImageUrl ?? ""))
                         .resizable()
@@ -71,12 +66,12 @@ class MainMessagesViewModel: ObservableObject{
                         .clipped()
                         .cornerRadius(44)
                     VStack(alignment: .leading, spacing: 4){
-                        let email =  vm.chatUser?.email.replacingOccurrences(of: "@gmail.com", with: "") ?? ""
-                            .replacingOccurrences(of: "@hotmail.com", with: "") // Removing gmail and hotmail from the name
+                        let email =  vm.chatUser?.email.replacingOccurrences(of: "@gmail.com", with: " ") ?? ""
+                            .replacingOccurrences(of: "@hotmail.com", with: " ") // Removing gmail and hotmail from the name
                         Text(email)
                             .font(.system(size: 24, weight: .bold))
                         HStack{
-                            Circle()
+                            Circle() 
                                 .foregroundColor(.green)
                                 .frame(width: 10, height: 10)
                             Text("online")
@@ -96,43 +91,45 @@ class MainMessagesViewModel: ObservableObject{
                 }
                 .padding()
                 .actionSheet(isPresented: $shouldShowLogOutOptions) { // A popup screen which shows the settings
-                         .init(title: Text("Settings"), message: Text("What do you wanna do?"), buttons: [
-                             .destructive(Text("Sign Out"), action: {
-                                 print("handle sign out")
-                                 vm.handleSignOut()
-                             }),
-                                 .cancel()
-                         ])
-                     }
+                    .init(title: Text("Settings"), message: Text("What do you wanna do?"), buttons: [
+                        .destructive(Text("Sign Out"), action: {
+                            print("handle sign out")
+                            vm.handleSignOut()
+                        }),
+                        .cancel()
+                    ])
+                }
                 .fullScreenCover(isPresented: $vm.isUserCurrentlyLoggedOut, onDismiss: nil){ // It will direct to the login view
                     LoginView(didCompleteLoginProcess: {
                         self.vm.isUserCurrentlyLoggedOut = false
                         self.vm.fetchCurrentUser()
                     })
                 }
-                
                 // MARK: - Messages
-                
                 ScrollView{
                     ForEach(0..<10, id: \.self){ num in
                         VStack{
-                            HStack(spacing: 16){
-                                Image(systemName: "person.fill")
-                                    .font(.system(size: 32))
-                                    .padding(8)
-                                    .overlay(RoundedRectangle(cornerRadius: 44)
-                                        .stroke(Color.black, lineWidth: 1)
-                                    )
-                                VStack(alignment: .leading){
-                                    Text("Username")
-                                        .font(.system(size: 14, weight: .bold))
-                                    Text("Message sent to user")
-                                        .font(.system(size: 14))
-                                        .foregroundColor(Color(.lightGray))
+                            NavigationLink {
+                                Text("destination")
+                            } label: {
+                                HStack(spacing: 16){
+                                    Image(systemName: "person.fill")
+                                        .font(.system(size: 32))
+                                        .padding(8)
+                                        .overlay(RoundedRectangle(cornerRadius: 44)
+                                            .stroke(Color.black, lineWidth: 1)
+                                        )
+                                    VStack(alignment: .leading){
+                                        Text("Username")
+                                            .font(.system(size: 14, weight: .bold))
+                                        Text("Message sent to user")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(Color(.lightGray))
+                                    }
+                                    Spacer()
+                                    Text("22d")
+                                        .font(.system(size: 14, weight: .semibold))
                                 }
-                                Spacer()
-                                Text("22d")
-                                    .font(.system(size: 14, weight: .semibold))
                             }
                             Divider()
                                 .padding(.vertical, 8)
@@ -141,31 +138,40 @@ class MainMessagesViewModel: ObservableObject{
                     }
                     .padding(.bottom, 50)
                 }
-                
                 // MARK: - New message button
-                
-                .overlay(Button {
-                    //
-                } label: {
-                    HStack{
-                        Spacer()
-                        Text("+ New message")
-                            .font(.system(size: 16, weight: .bold))
-                        Spacer()
+                    .overlay(Button {
+                        shouldShowNewMessageScreen.toggle()
+                    } label: {
+                        HStack{
+                            Spacer()
+                            Text("+ New message")
+                                .font(.system(size: 16, weight: .bold))
+                            Spacer()
+                        }
+                        .foregroundColor(Color("NewMessageText")) // Dark mode compatibility
+                        .padding(.vertical)
+                        .background(Color("NewMessageButton")) // Dark mode compatibility
+                        .cornerRadius(30)
+                        .shadow(radius: 20)
+                        .padding()
+                    }, alignment: .bottom)
+                    .fullScreenCover(isPresented: $shouldShowNewMessageScreen, onDismiss: nil){
+                        NewMessageView(didSelectNewUser: { user in
+                            print(user.email)
+                            self.shouldNavigateToChatLogView.toggle()
+                            self.chatUser = user
+                        })
                     }
-                    .foregroundColor(Color("NewMessageText")) // Dark mode compatibility
-                    .padding(.vertical)
-                    .background(Color("NewMessageButton")) // Dark mode compatibility
-                    .cornerRadius(30)
-                    .shadow(radius: 20)
-                    .padding()
-                }, alignment: .bottom)
+                NavigationLink("", isActive: $shouldNavigateToChatLogView){
+                    ChatLogView(chatUser: self.chatUser)
+                }
             }
             .navigationBarHidden(true)
             .navigationTitle("Main Messages")
         }
     }
 }
+
 // MARK: - Preview
 struct MainMessagesView_Previews: PreviewProvider {
     static var previews: some View {

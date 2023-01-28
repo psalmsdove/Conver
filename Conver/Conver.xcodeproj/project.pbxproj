@@ -15,6 +15,8 @@
 		43805F172982BB1400020FEB /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43805F162982BB1400020FEB /* ImagePicker.swift */; };
 		438B2D112982F57500CAD78A /* MainMessagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438B2D102982F57500CAD78A /* MainMessagesView.swift */; };
 		438B2D15298300FF00CAD78A /* Firebase Manager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 438B2D14298300FF00CAD78A /* Firebase Manager.swift */; };
+		43B0764029851D1B003C19FB /* NewMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B0763F29851D1B003C19FB /* NewMessageView.swift */; };
+		43B0764229853A26003C19FB /* ChatLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43B0764129853A26003C19FB /* ChatLogView.swift */; };
 		43C366A72982B04F00338BF2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 43C366A62982B04F00338BF2 /* GoogleService-Info.plist */; };
 		43FC280529806B4E00815E38 /* ConverApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FC280429806B4E00815E38 /* ConverApp.swift */; };
 		43FC280729806B4E00815E38 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FC280629806B4E00815E38 /* LoginView.swift */; };
@@ -27,6 +29,8 @@
 		43805F162982BB1400020FEB /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		438B2D102982F57500CAD78A /* MainMessagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMessagesView.swift; sourceTree = "<group>"; };
 		438B2D14298300FF00CAD78A /* Firebase Manager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Firebase Manager.swift"; sourceTree = "<group>"; };
+		43B0763F29851D1B003C19FB /* NewMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageView.swift; sourceTree = "<group>"; };
+		43B0764129853A26003C19FB /* ChatLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLogView.swift; sourceTree = "<group>"; };
 		43C366A62982B04F00338BF2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		43FC280129806B4E00815E38 /* Conver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Conver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		43FC280429806B4E00815E38 /* ConverApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverApp.swift; sourceTree = "<group>"; };
@@ -79,6 +83,8 @@
 			children = (
 				43FC280629806B4E00815E38 /* LoginView.swift */,
 				438B2D102982F57500CAD78A /* MainMessagesView.swift */,
+				43B0763F29851D1B003C19FB /* NewMessageView.swift */,
+				43B0764129853A26003C19FB /* ChatLogView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -204,7 +210,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				43447BC2298477850057881B /* ChatUser.swift in Sources */,
+				43B0764229853A26003C19FB /* ChatLogView.swift in Sources */,
 				438B2D15298300FF00CAD78A /* Firebase Manager.swift in Sources */,
+				43B0764029851D1B003C19FB /* NewMessageView.swift in Sources */,
 				43805F172982BB1400020FEB /* ImagePicker.swift in Sources */,
 				438B2D112982F57500CAD78A /* MainMessagesView.swift in Sources */,
 				43FC280729806B4E00815E38 /* LoginView.swift in Sources */,

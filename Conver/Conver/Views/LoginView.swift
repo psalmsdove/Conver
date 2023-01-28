@@ -26,13 +26,6 @@ struct LoginView: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 16) {
-                    Spacer()
-                    Text("Conver.")
-                        .font(.callout)
-                        .fontWeight(.black)
-                        .font(.system(size: 48))
-                        .background(Image("loginbackground")).opacity(0.5)
-                    Spacer()
                     // MARK: - Picker
                     Picker(selection: $isLoginMode, label: Text("Picker here")) {
                         Text("Login")
@@ -58,11 +51,10 @@ struct LoginView: View {
                                         .padding()
                                         .foregroundColor(.black)
                                 }
-                            }
-                            
+                            } 
                         }
                     }
-                    // MARK: - E-mail and Password field
+                    // MARK: - E-mail and Password Group
                     Group {
                         TextField("Email", text: $email)
                             .keyboardType(.emailAddress)
@@ -83,21 +75,15 @@ struct LoginView: View {
                                 .font(.system(size: 14, weight: .semibold))
                             Spacer()
                         }
-                        
                         .background(Color.black)
                         .cornerRadius(30)
                     }
-                    
                     Text(self.loginStatusMessage)
                         .foregroundColor(.red)
                 }
                 .padding()
-                
-                
             }
             .navigationTitle(isLoginMode ? "Log In" : "Create Account")
-            
-            
             .background(Color(.init(white: 0, alpha: 0.05))
                 .ignoresSafeArea())
         }
@@ -136,15 +122,16 @@ struct LoginView: View {
         }
     }
     
-    // MARK: - Sign Up
-    
     @State var loginStatusMessage = ""
+    
+    // MARK: - Sign Up
     
     private func createNewAccount() {
        if self.image == nil{
             self.loginStatusMessage = "You must select an avatar image"
             return
         }
+        
         FirebaseManager.shared.auth.createUser(withEmail: email, password: password) { result, err in
             if let err = err {
                 print("Failed to create user:", err)
@@ -177,7 +164,9 @@ struct LoginView: View {
                 }
                 self.loginStatusMessage = "Successfully stored image with url: \(url?.absoluteString ?? "")"
                 print(url!.absoluteString)
-                self.storeUserInformation(imageProfileUrl: url!)
+                
+                guard let url = url else { return }
+                self.storeUserInformation(imageProfileUrl: url)
                 }
             }
         }
@@ -198,14 +187,13 @@ struct LoginView: View {
                 self.didCompleteLoginProcess()
             }
     }
+}
+// MARK: - Preview
 
-    // MARK: - Preview
-    
-    struct LoginView_Previews: PreviewProvider {
-        static var previews: some View {
-            LoginView(didCompleteLoginProcess: {
-                
-            })
-        }
+struct LoginView_Previews: PreviewProvider {
+    static var previews: some View {
+        LoginView(didCompleteLoginProcess: {
+            
+        })
     }
 }
